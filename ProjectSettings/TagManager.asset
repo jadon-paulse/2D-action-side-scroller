@@ -15,9 +15,9 @@ TagManager:
   - Front
   - Back
   - Ground
-  - 
-  - 
-  - 
+  - Player
+  - PlayerHitbox
+  - EnemyHitbox
   - 
   - 
   - 

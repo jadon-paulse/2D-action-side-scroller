@@ -9,11 +9,14 @@ public class EnemyGuard : MonoBehaviour
     public Rigidbody2D rb;
     public LayerMask groundLayers;
 
+    public DetectionZone attackZone;
+
     public Transform groundCheck;
 
     bool isFacingRight = true;
 
     RaycastHit2D hit;
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -21,9 +24,26 @@ public class EnemyGuard : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    public bool _hasTarget = false;
+
+    public bool HasTarget { get { return _hasTarget; } private set 
+        {
+
+            _hasTarget = value;
+            animator.SetBool(AnimationString.hasTarget, value);
+
+        } 
+    }
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    //Update is called once per frame
     void Update()
     {
+        HasTarget = attackZone.detectedColliders.Count > 0;
         hit = Physics2D.Raycast(groundCheck.position, -transform.up, 1f, groundLayers);
     }
 
