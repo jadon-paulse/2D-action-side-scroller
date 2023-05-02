@@ -6,6 +6,8 @@ public class EnemyGuard : MonoBehaviour
 {
 
     public float speed = 2f;
+    public int health = 1;
+    private Animator anim;
     public Rigidbody2D rb;
     public LayerMask groundLayers;
 
@@ -38,6 +40,24 @@ public class EnemyGuard : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+
+        if(health <= 0)
+        {
+            anim.SetBool("death", true);
+            Destroy(gameObject);
+            //Die();
+        }
+    }
+
+    void Die()
+    {
+        //Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 
     //Update is called once per frame

@@ -17,22 +17,38 @@ public class PlayerMovement : MonoBehaviour
     private float jumpingPower = 16f;
     private bool isFacingRight = true;
 
+    private Animator anim;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+    }
+
     void Update()
     {
+        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+
         if (!isFacingRight && horizontal > 0f)
         {
             Flip();
+            //anim.SetBool("running", true);
         }
         else if (isFacingRight && horizontal < 0f)
         {
             Flip();
+           // anim.SetBool("running", true);
         }
+
+        //Set animator parameters
+        anim.SetBool("running", horizontal != 0);
+        anim.SetBool("ground", IsGrounded());
     }
 
-    private void FixedUpdate()
-    {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-    }
+    // private void FixedUpdate()
+    // {
+    //     rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+    // }
 
     public void Jump(InputAction.CallbackContext context)
     {
@@ -51,14 +67,6 @@ public class PlayerMovement : MonoBehaviour
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
-
-/*    private void Flip()
-    {
-        isFacingRight = !isFacingRight;
-        Vector3 localScale = transform.localScale;
-        localScale.x *= -1f;
-        transform.localScale = localScale;
-    }*/
 
     private void Flip()
     {
