@@ -12,10 +12,12 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public LayerMask groundLayer;
 
+    [SerializeField] private float attackCooldown;
     private float horizontal;
     private float speed = 8f;
     private float jumpingPower = 16f;
     private bool isFacingRight = true;
+    private float cooldownTimer = Mathf.Infinity;
 
     private Animator anim;
 
@@ -39,6 +41,13 @@ public class PlayerMovement : MonoBehaviour
             Flip();
            // anim.SetBool("running", true);
         }
+
+        if (Input.GetMouseButton(0) && cooldownTimer > attackCooldown && canAttack())
+        {
+            Attack();
+        }
+
+        cooldownTimer += Time.deltaTime;
 
         //Set animator parameters
         anim.SetBool("running", horizontal != 0);
@@ -72,6 +81,18 @@ public class PlayerMovement : MonoBehaviour
     {
         isFacingRight = !isFacingRight;
         transform.Rotate(0f, 180f, 0f);
+    }
+
+    private void Attack()
+    {
+        anim.SetTrigger("attack");
+        cooldownTimer = 0;
+        Console.WriteLine("Player Attack");
+    }
+
+    public bool canAttack()
+    {
+        return horizontal == 0 && IsGrounded(); 
     }
 
     public void Move(InputAction.CallbackContext context)
